@@ -5,10 +5,13 @@ FROM golang:alpine AS builder
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux \
-    GOPROXY="*"
+    GONOPROXY="*"
 
 # Set the working directory inside the container
 WORKDIR /online-shop
+
+# Install Git
+RUN apk add --no-cache git
 
 # Copy go.mod and go.sum files to cache dependencies downloading
 COPY go.mod go.sum ./
