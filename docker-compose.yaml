@@ -1,27 +1,54 @@
 version: "3.7"
 
+networks:
+  app_network:
+    driver: bridge
+
 services:
-  db:
+  
+  mongo:
     image : 'mongo'
+    container_name: mongo_node
     environment:
       - MONGO_INITDB_DATABASE=online-shop
     volumes:
-    - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-    - ./mongo-volume/:/data/db
-    ports:
-    - '27017-27019:27017-27019'
+    - mongo_data:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    - mongo_data:/data/db
+    networks:
+      - app_network
 
   redis:
     image: redis:latest
     container_name: redis_node
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     environment:
       - REDIS_REPLICATION_MODE=master
-      # Add other environment variables as needed
+    networks:
+      - app_network
+    
+  online_shop:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: online_shop_container
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_URL=mongodb://mongo_node:27017
+      - MONGODB_DB_NAME=shop
+      - REDIS_URL=redis_node:6379
+      
+    networks:
+      - app_network
+    
+    depends_on:
+      - redis
+      - mongo
+
 
 volumes:
   redis_data:
+    driver: local
+  mongo_data:
     driver: local

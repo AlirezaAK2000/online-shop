@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	initializers.EnvVariableInitializer()
-	initializers.InitializeMongoConnection()
-	initializers.InitilizeRedisConnection()
+	// initializers.EnvVariableInitializer()
+	// initializers.InitializeMongoConnection()
+	// initializers.InitilizeRedisConnection()
 }
 
 func main() {
