@@ -16,5 +16,4 @@ func InitilizeRedisConnection() {
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
-
 }

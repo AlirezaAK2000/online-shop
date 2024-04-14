@@ -5,7 +5,8 @@ FROM golang:alpine AS builder
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux \
-    GONOPROXY="*"
+    GOPROXY=https://proxy.golang.org \
+    GONOPROXY=github.com
 
 # Set the working directory inside the container
 WORKDIR /online-shop
