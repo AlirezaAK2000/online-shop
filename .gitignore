@@ -2,3 +2,5 @@ mongo-volume
 init-mongo.js
 install.sh
 online-shop
+docker-compose-test.yaml
+.env

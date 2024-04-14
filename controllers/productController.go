@@ -4,7 +4,9 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/AlirezaAK2000/online-shop/initializers"
 	"github.com/AlirezaAK2000/online-shop/repo"
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -71,6 +73,15 @@ func GetProductByIDController(c *gin.Context) {
 		}
 		c.Status(http.StatusInternalServerError)
 		return
+	}
+
+	err2 := initializers.KafkaProducer.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{Topic: &initializers.ProductClickTopic, Partition: kafka.PartitionAny},
+		Value:          []byte(id),
+	}, nil)
+
+	if err2 != nil {
+		log.Fatalln(err2)
 	}
 
 	c.JSON(200, gin.H{
